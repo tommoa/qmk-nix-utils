@@ -32,7 +32,7 @@ in
 
 with pkgs;
 let
-  avrlibc = pkgsCross.avr.libcCross;
+  avrlibc = pkgsCross.avr.libc;
 
   avr_incflags = [
     "-isystem ${avrlibc}/avr/include"
@@ -61,7 +61,7 @@ mkShell {
   ]
   ++ lib.optional avr [
     pkgsCross.avr.buildPackages.binutils
-    pkgsCross.avr.buildPackages.gcc8
+    pkgsCross.avr.buildPackages.gcc
     avrlibc
     avrdude
   ]
