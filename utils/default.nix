@@ -17,20 +17,23 @@ let
   qmk-with-keyboard-src = mkDerivation {
     name = "qmk-with-keyboard-src";
     src = qmk-firmware-source;
+    srcs = firmware-path;
     phases = [ "installPhase" ];
 
     installPhase = let
       target_dir = if type == "keyboard" then
-        "$out/keyboards"
+      "$out/keyboards/${keyboard-name}"
       else if type == "keymap" then
         "$out/keyboards/${keyboard-name}/keymaps"
       else throw "The only values valid for type are 'keyboard' and 'keymap'.";
     in ''
       mkdir "$out"
       cp -r "$src"/* "$out"
+      chmod +w -R $out
+      mkdir -p ${target_dir}
       chmod +w ${target_dir}
-      cp -r ${firmware-path} ${target_dir}/${keymap-name}
-      chmod -w ${target_dir}
+      cp -r ${firmware-path}/* ${target_dir}/
+      chmod -w -R $out
     '';
   };
 
