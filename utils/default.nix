@@ -57,6 +57,7 @@ let
     else
       pkgs.writeShellScriptBin "flasher" ''
         HEX_FILE=$(find ${hex}/ -type f -name "*.hex" | head -n 1)
+        BIN_FILE=$(find ${hex}/ -type f -name "*.bin" | head -n 1)
         
         ${flash-script}
       '';
