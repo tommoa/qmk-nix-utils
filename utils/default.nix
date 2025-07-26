@@ -21,6 +21,7 @@ let
   qmk-with-keyboard-src = mkDerivation {
     name = "qmk-with-keyboard-src";
     src = qmk-firmware-source;
+    srcs = firmware-path;
     phases = [ "installPhase" ];
 
     installPhase = let
@@ -32,9 +33,11 @@ let
     in ''
       mkdir "$out"
       cp -r "$src"/* "$out"
+      chmod +w -R $out
+      mkdir -p ${target_dir}
       chmod +w ${target_dir}
-      cp -r ${firmware-path} ${target_dir}/${keymap-name}
-      chmod -w ${target_dir}
+      cp -r ${firmware-path}/* ${target_dir}/
+      chmod -w -R $out
     '';
   };
 
@@ -61,6 +64,7 @@ let
     else
       pkgs.writeShellScriptBin "flasher" ''
         HEX_FILE=$(find ${hex}/ -type f -name "*.hex" | head -n 1)
+        BIN_FILE=$(find ${hex}/ -type f -name "*.bin" | head -n 1)
         
         ${flash-script}
       '';
