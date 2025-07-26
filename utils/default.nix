@@ -2,6 +2,7 @@
 { src
 , keyboard-name
 , keymap-name
+, keyboard-variant ? null
 , flash-script ? null
 , extra-build-inputs ? [ ]
 , qmk-firmware-source ? qmk-firmware-default-source
@@ -13,6 +14,9 @@
 with pkgs.stdenv;
 let
   firmware-path = src;
+  keyboard-path = if keyboard-variant != null then
+    "${keyboard-name}/${keyboard-variant}"
+  else "${keyboard-name}";
 
   qmk-with-keyboard-src = mkDerivation {
     name = "qmk-with-keyboard-src";
@@ -22,9 +26,9 @@ let
 
     installPhase = let
       target_dir = if type == "keyboard" then
-      "$out/keyboards/${keyboard-name}"
+        "$out/keyboards/${keyboard-path}"
       else if type == "keymap" then
-        "$out/keyboards/${keyboard-name}/keymaps"
+        "$out/keyboards/${keyboard-name}/keymaps/${keymap-name}"
       else throw "The only values valid for type are 'keyboard' and 'keymap'.";
     in ''
       mkdir "$out"
@@ -46,7 +50,7 @@ let
 
     buildPhase = ''
       SKIP_GIT=true SKIP_VERSION=true \
-          qmk compile -kb ${keyboard-name} -km ${keymap-name}
+          qmk compile -kb ${keyboard-path} -km ${keymap-name}
     '';
     installPhase = ''
       mkdir $out
