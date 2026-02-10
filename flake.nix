@@ -3,8 +3,8 @@
 
   inputs =
     {
-      nixpkgsUnstable.url = github:nixos/nixpkgs/nixpkgs-unstable;
-      flake-utils-plus.url = github:gytis-ivaskevicius/flake-utils-plus/master;
+      nixpkgsUnstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+      flake-utils-plus.url = "github:gytis-ivaskevicius/flake-utils-plus/master";
     };
 
   outputs = { self, nixpkgsUnstable, flake-utils-plus }:
